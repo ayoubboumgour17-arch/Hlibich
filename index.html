@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حفصة 💖 - 3D Love</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            overflow-x: hidden;
+        }
+
+        /* ============ الواجهة الأولى - السؤال ============ */
+        #screen-question {
+            background: radial-gradient(ellipse at center, #1a0033 0%, #0d001a 50%, #000000 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* جزيئات القلوب في الخلفية */
+        .particles-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle-heart {
+            position: absolute;
+            animation: floatParticle 6s infinite;
+            opacity: 0.3;
+            filter: blur(1px);
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(720deg) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* بطاقة السؤال 3D */
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 105, 180, 0.4);
+            border-radius: 30px;
+            padding: 50px 60px;
+            transform-style: preserve-3d;
+            transform: rotateX(5deg) rotateY(-5deg);
+            animation: cardFloat 4s ease-in-out infinite;
+            box-shadow: 
+                0 20px 60px rgba(255, 20, 147, 0.3),
+                0 0 80px rgba(255, 105, 180, 0.2),
+                inset 0 0 30px rgba(255, 255, 255, 0.05);
+            z-index: 1;
+            text-align: center;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: rotateX(5deg) rotateY(-5deg) translateY(0);
+            }
+            50% {
+                transform: rotateX(8deg) rotateY(-8deg) translateY(-20px);
+            }
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 35px;
+            background: linear-gradient(45deg, #ff1493, #ff6b9d, #ff1493, #ff6b9d);
+            background-size: 400% 400%;
+            animation: borderGlow 3s ease-in-out infinite;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .question-text {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b9d, #ff1493, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            animation: textGlow 2s ease-in-out infinite;
+            letter-spacing: 2px;
+            transform: translateZ(30px);
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(255, 20, 147, 0.8));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255, 20, 147, 1));
+            }
+        }
+
+        .small-hearts-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            animation: floatRow 3s ease-in-out infinite;
+            transform: translateZ(20px);
+        }
+
+        @keyframes floatRow {
+            0%, 100% { transform: translateZ(20px) translateY(0); }
+            50% { transform: translateZ(20px) translateY(-10px); }
+        }
+
+        .small-heart {
+            font-size: 2.5rem;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        .small-heart:nth-child(2) { animation-delay: 0.2s; }
+        .small-heart:nth-child(3) { animation-delay: 0.4s; }
+        .small-heart:nth-child(4) { animation-delay: 0.6s; }
+        .small-heart:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.2); }
+        }
+
+        /* الأزرار 3D */
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+
+        .btn-3d {
+            padding: 20px 60px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            min-width: 350px;
+        }
+
+        .btn-3d::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 10px;
+            right: 10px;
+            height: 15px;
+            border-radius: 50%;
+            filter: blur(15px);
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-yes-green {
+            background: linear-gradient(135deg, #00e676, #00c853, #00e676);
+            background-size: 200% 200%;
+            color: white;
+            box-shadow: 0 15px 40px rgba(0, 230, 118, 0.5);
+            animation: greenGlow 2s ease-in-out infinite;
+            transform: translateZ(20px);
+        }
+
+        @keyframes greenGlow {
+            0%, 100% {
+                box-shadow: 0 15px 40px rgba(0, 230, 118, 0.5);
+            }
+            50% {
+                box-shadow: 0 20px 60px rgba(0, 230, 118, 0.8), 0 0 80px rgba(0, 230, 118, 0.4);
+            }
+        }
+
+        .btn-yes-green::after {
+            background: rgba(0, 230, 118, 0.6);
+        }
+
+        .btn-yes-red {
+            background: linear-gradient(135deg, #ff1744, #d50000, #ff1744);
+            background-size: 200% 200%;
+            color: white;
+            box-shadow: 0 15px 40px rgba(255, 23, 68, 0.5);
+            animation: redGlow 2s ease-in-out infinite;
+            transform: translateZ(25px);
+        }
+
+        @keyframes redGlow {
+            0%, 100% {
+                box-shadow: 0 15px 40px rgba(255, 23, 68, 0.5);
+            }
+            50% {
+                box-shadow: 0 20px 60px rgba(255, 23, 68, 0.8), 0 0 80px rgba(255, 23, 68, 0.4);
+            }
+        }
+
+        .btn-yes-red::after {
+            background: rgba(255, 23, 68, 0.6);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #607d8b, #455a64, #607d8b);
+            background-size: 200% 200%;
+            color: #ccc;
+            box-shadow: 0 10px 30px rgba(96, 125, 139, 0.4);
+            transform: translateZ(15px);
+            font-size: 1.3rem;
+            padding: 15px 40px;
+            min-width: 200px;
+        }
+
+        .btn-3d:hover {
+            transform: translateZ(40px) scale(1.08);
+            filter: brightness(1.2);
+        }
+
+        .btn-3d:active {
+            transform: translateZ(10px) scale(0.95);
+        }
+
+        /* ============ الواجهة الثانية - القلوب والصدر ============ */
+        #screen-hearts {
+            background: radial-gradient(ellipse at center, #ff1a66 0%, #b3003b 40%, #4d0019 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love-scene {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: sceneRotate 10s ease-in-out infinite;
+        }
+
+        @keyframes sceneRotate {
+            0%, 100% { transform: rotateY(0deg) rotateX(5deg); }
+            50% { transform: rotateY(10deg) rotateX(-5deg); }
+        }
+
+        .big-3d-heart-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            transform-style: preserve-3d;
+            animation: heart3DRotate 8s linear infinite;
+        }
+
+        @keyframes heart3DRotate {
+            0% { transform: rotateY(0deg) rotateX(20deg); }
+            100% { transform: rotateY(360deg) rotateX(20deg); }
+        }
+
+        .heart-3d-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-size: 8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 30px rgba(255, 0, 100, 0.8));
+        }
+
+        .hearts-text-3d {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.8),
+                0 0 40px rgba(255, 20, 147, 0.6),
+                0 0 80px rgba(255, 20, 147, 0.4);
+            animation: text3DFloat 2s ease-in-out infinite;
+            z-index: 10;
+            transform-style: preserve-3d;
+            transform: translateZ(50px);
+        }
+
+        @keyframes text3DFloat {
+            0%, 100% {
+                text-shadow: 
+                    0 0 20px rgba(255, 255, 255, 0.8),
+                    0 0 40px rgba(255, 20, 147, 0.6);
+            }
+            50% {
+                text-shadow: 
+                    0 0 40px rgba(255, 255, 255, 1),
+                    0 0 80px rgba(255, 20, 147, 0.9),
+                    0 0 120px rgba(255, 20, 147, 0.5);
+            }
+        }
+
+        .hearts-rain-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .rain-heart {
+            position: absolute;
+            animation: rainFall linear infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 50, 100, 0.8));
+        }
+
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(25vh) rotate(90deg) scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) scale(1.2);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translateY(75vh) rotate(270deg) scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* منطقة رفع الصورة 3D */
+        .upload-card-3d {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px;
+            padding: 30px 40px;
+            transform-style: preserve-3d;
+            transform: rotateX(5deg) perspective(500px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(255, 20, 147, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+
+        .upload-card-3d:hover {
+            transform: rotateX(0deg) translateZ(30px) scale(1.05);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(255, 20, 147, 0.5);
+        }
+
+        /* ============ الواجهة الثالثة - الرفض ============ */
+        #screen-no {
+            background: radial-gradient(ellipse at center, #2c3e50 0%, #1a1a2e 50%, #000000 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sad-scene {
+            transform-style: preserve-3d;
+            animation: sadFloat 4s ease-in-out infinite;
+            text-align: center;
+        }
+
+        @keyframes sadFloat {
+            0%, 100% { transform: translateZ(0) translateY(0); }
+            50% { transform: translateZ(30px) translateY(-20px); }
+        }
+
+        .broken-heart {
+            font-size: 8rem;
+            animation: breakHeart 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+        }
+
+        @keyframes breakHeart {
+            0%, 100% { transform: scale(1) rotate(0); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .no-text-3d {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ff6b6b;
+            text-shadow: 
+                0 0 20px rgba(255, 107, 107, 0.8),
+                0 0 40px rgba(255, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transform: translateZ(20px);
+            animation: sadPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes sadPulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        .rain-drops {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .drop {
+            position: absolute;
+            top: -20px;
+            animation: rain linear infinite;
+            color: rgba(150, 200, 255, 0.4);
+            font-size: 1.5rem;
+        }
+
+        @keyframes rain {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .preview-image-3d {
+            max-width: 280px;
+            max-height: 280px;
+            border-radius: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: none;
+            transform-style: preserve-3d;
+            transform: rotateY(5deg);
+            z-index: 10;
+            animation: imageShow 0.5s ease-out;
+        }
+
+        @keyframes imageShow {
+            from {
+                opacity: 0;
+                transform: rotateY(0deg) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: rotateY(5deg) scale(1);
+            }
+        }
+
+        /* تأثيرات إضافية */
+        .glow-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            animation: ringPulse 3s ease-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ringPulse {
+            0% {
+                width: 100px;
+                height: 100px;
+                opacity: 0.8;
+            }
+            100% {
+                width: 400px;
+                height: 400px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== الواجهة الأولى: السؤال ==================== -->
+    <div id="screen-question" class="screen">
+        <!-- خلفية جزيئات القلوب -->
+        <div class="particles-bg" id="particlesBg"></div>
+        
+        <!-- حلقات متوهجة -->
+        <div class="glow-ring" style="top: 20%; left: 10%;"></div>
+        <div class="glow-ring" style="top: 60%; right: 15%; animation-delay: 1.5s;"></div>
+        <div class="glow-ring" style="bottom: 20%; left: 50%; animation-delay: 0.8s;"></div>
+
+        <!-- بطاقة السؤال 3D -->
+        <div class="question-card">
+            <div class="small-hearts-row">
+                <span class="small-heart">💕</span>
+                <span class="small-heart">💗</span>
+                <span class="small-heart">💖</span>
+                <span class="small-heart">💘</span>
+                <span class="small-heart">💝</span>
+            </div>
+            <div class="question-text">
+                واش كتبغيني احفصة ؟
+            </div>
+            <div class="small-hearts-row">
+                <span class="small-heart">💟</span>
+                <span class="small-heart">♥️</span>
+                <span class="small-heart">💓</span>
+                <span class="small-heart">💞</span>
+                <span class="small-heart">💌</span>
+            </div>
+        </div>
+
+        <!-- الأزرار 3D -->
+        <div class="buttons-container">
+            <button class="btn-3d btn-yes-green" onclick="showHeartsWithUpload()">
+                💚 اه
+            </button>
+            <button class="btn-3d btn-yes-red" onclick="showHeartsWithUpload()">
+                ❤️ اه و لكن بالأحمر
+            </button>
+            <button class="btn-3d btn-no" onclick="showNo()">
+                💔 لا
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== الواجهة الثانية: القلوب والصدر ==================== -->
+    <div id="screen-hearts" class="screen hidden">
+        <!-- أمطار القلوب -->
+        <div class="hearts-rain-container" id="heartsRain"></div>
+        
+        <!-- حلقات متوهجة -->
+        <div class="glow-ring" style="top: 10%; left: 20%;"></div>
+        <div class="glow-ring" style="bottom: 15%; right: 10%; animation-delay: 1s;"></div>
+
+        <!-- قلب 3D دوار -->
+        <div class="big-3d-heart-container">
+            <div class="heart-3d-face">❤️‍🔥</div>
+        </div>
+
+        <!-- النص -->
+        <div class="hearts-text-3d">
+            يالاه صوري ليا صدرك 💕
+        </div>
+
+        <!-- بطاقة رفع الصورة -->
+        <div class="upload-card-3d" onclick="document.getElementById('file-input').click()">
+            <div style="font-size: 4rem; text-align: center;">📸</div>
+            <div style="color: white; font-size: 1.2rem; margin-top: 10px; text-align: center;">
+                ضغطي هنا باش تصوري صدرك ✨
+            </div>
+        </div>
+        
+        <input type="file" id="file-input" accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
+        <img id="preview-image" class="preview-image-3d" src="" alt="معاينة الصورة">
+    </div>
+
+    <!-- ==================== الواجهة الثالثة: الرفض ==================== -->
+    <div id="screen-no" class="screen hidden">
+        <!-- قطرات المطر -->
+        <div class="rain-drops" id="rainDrops"></div>
+
+        <div class="sad-scene">
+            <div class="broken-heart">💔</div>
+            <div class="no-text-3d">
+                لميمة احليبيش لميمة 😢
+            </div>
+            <div class="no-text-3d" style="font-size: 1.8rem; color: #a0c4ff; margin-top: 20px;">
+                غندعي معاك تنجحي ف S4 🤲📚
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ إنشاء جزيئات القلوب في الخلفية ============
+        function createParticles() {
+            const container = document.getElementById('particlesBg');
+            const hearts = ['❤️', '💕', '💗', '💖', '💘', '💝', '💟', '💓', '💞', '💌', '♥️', '🩷'];
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'particle-heart';
+                particle.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (4 + Math.random() * 8) + 's';
+                particle.style.fontSize = (1 + Math.random() * 3) + 'rem';
+                container.appendChild(particle);
+            }
+        }
+
+        // ============ إنشاء أمطار القلوب ============
+        function createHeartsRain() {
+            const container = document.getElementById('heartsRain');
+            const hearts = ['❤️', '💕', '💗', '💖', '💘', '💝', '💟', '💓', '💞', '💌', '♥️', '🩷', '❤️‍🔥', '🫀'];
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 60; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'rain-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 4 + 's';
+                heart.style.animationDuration = (2 + Math.random() * 5) + 's';
+                heart.style.fontSize = (1.5 + Math.random() * 3) + 'rem';
+                container.appendChild(heart);
+            }
+        }
+
+        // ============ إنشاء قطرات المطر ============
+        function createRainDrops() {
+            const container = document.getElementById('rainDrops');
+            const drops = ['💧', '💦', '🌧️', '💧', '💦'];
+            
+            for (let i = 0; i < 40; i++) {
+                const drop = document.createElement('span');
+                drop.className = 'drop';
+                drop.textContent = drops[Math.floor(Math.random() * drops.length)];
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDelay = Math.random() * 3 + 's';
+                drop.style.animationDuration = (1 + Math.random() * 2) + 's';
+                drop.style.fontSize = (1 + Math.random() * 2) + 'rem';
+                container.appendChild(drop);
+            }
+        }
+
+        // ============ عرض الواجهات ============
+        function hideAllScreens() {
+            document.getElementById('screen-question').style.display = 'none';
+            document.getElementById('screen-hearts').style.display = 'none';
+            document.getElementById('screen-no').style.display = 'none';
+        }
+
+        function showHeartsWithUpload() {
+            hideAllScreens();
+            const screen = document.getElementById('screen-hearts');
+            screen.style.display = 'flex';
+            createHeartsRain();
+            
+            // إعادة إنشاء الأمطار كل فترة
+            setInterval(createHeartsRain, 6000);
+        }
+
+        function showNo() {
+            hideAllScreens();
+            document.getElementById('screen-no').style.display = 'flex';
+            createRainDrops();
+        }
+
+        // ============ معالجة رفع الصورة ============
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('preview-image');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    
+                    // إخفاء بطاقة الرفع
+                    document.querySelector('.upload-card-3d').style.display = 'none';
+                    
+                    // تأثير احتفالي
+                    createCelebrationHearts();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ============ قلوب احتفالية عند رفع الصورة ============
+        function createCelebrationHearts() {
+            const hearts = ['🎉', '❤️', '💕', '💖', '✨', '💘', '💝', '💗', '🩷', '❤️‍🔥'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('span');
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        font-size: ${2 + Math.random() * 3}rem;
+                        pointer-events: none;
+                        z-index: 9999;
+                        animation: celebrateBurst ${1 + Math.random()}s ease-out forwards;
+                        transform: translate(-50%, -50%);
+                    `;
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        // إضافة animation للاحتفال
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes celebrateBurst {
+                0% {
+                    transform: translate(-50%, -50%) scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(
+                        calc(-50% + ${Math.random() * 400 - 200}px),
+                        calc(-50% + ${Math.random() * 400 - 200}px)
+                    ) scale(1.5);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ============ التهيئة الأولية ============
+        window.onload = function() {
+            createParticles();
+            document.getElementById('screen-question').style.display = 'flex';
+        };
+    </script>
+</body>
+</html>
